@@ -46,7 +46,7 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     zipCode: "",
-    country: "US",
+    country: "IN",
   })
 
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
@@ -94,7 +94,7 @@ export default function CheckoutPage() {
 
     // Mock calculations for demo
     const subtotal = getTotalPrice()
-    setShippingCost(subtotal > 100 ? 0 : 9.99) // Free shipping over $100
+    setShippingCost(subtotal > 100 ? 0 : 9.99) // Free shipping over ₹100
     setTax(subtotal * 0.08) // 8% tax rate
   }
 
@@ -120,7 +120,7 @@ export default function CheckoutPage() {
     }
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+₹/
     if (!emailRegex.test(shippingAddress.email)) {
       toast.error("Please enter a valid email address")
       return false
@@ -140,13 +140,13 @@ export default function CheckoutPage() {
 
     // Basic card number validation (should be 16 digits)
     const cardNumber = paymentInfo.cardNumber.replace(/\s/g, "")
-    if (cardNumber.length !== 16 || !/^\d+$/.test(cardNumber)) {
+    if (cardNumber.length !== 16 || !/^\d+₹/.test(cardNumber)) {
       toast.error("Please enter a valid 16-digit card number")
       return false
     }
 
     // CVV validation (3 or 4 digits)
-    if (!/^\d{3,4}$/.test(paymentInfo.cvv)) {
+    if (!/^\d{3,4}₹/.test(paymentInfo.cvv)) {
       toast.error("Please enter a valid CVV")
       return false
     }
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${getAuthToken()?.token}`
+      //     'Authorization': `Bearer ₹{getAuthToken()?.token}`
       //   },
       //   body: JSON.stringify(orderData)
       // })
@@ -208,7 +208,7 @@ export default function CheckoutPage() {
       //   })
 
       //   clearCart()
-      //   router.push(`/order-confirmation/${result.orderId}`)
+      //   router.push(`/order-confirmation/₹{result.orderId}`)
       // } else {
       //   throw new Error(result.message || 'Failed to place order')
       // }
@@ -216,7 +216,7 @@ export default function CheckoutPage() {
       // Mock order placement for demo
       await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulate API delay
 
-      const orderId = `ORD-${Date.now()}`
+      const orderId = `ORD-₹{Date.now()}`
       console.log("TODO: Create order with data:", {
         items,
         shippingAddress,
@@ -264,16 +264,16 @@ export default function CheckoutPage() {
               {[1, 2, 3].map((step) => (
                 <div key={step} className="flex items-center">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ₹{
                       currentStep >= step ? "bg-black text-white" : "bg-gray-200 text-gray-600"
                     }`}
                   >
                     {step}
                   </div>
-                  <span className={`ml-2 text-sm ${currentStep >= step ? "text-black" : "text-gray-500"}`}>
+                  <span className={`ml-2 text-sm ₹{currentStep >= step ? "text-black" : "text-gray-500"}`}>
                     {step === 1 ? "Shipping" : step === 2 ? "Payment" : "Review"}
                   </span>
-                  {step < 3 && <div className={`w-16 h-0.5 mx-4 ${currentStep > step ? "bg-black" : "bg-gray-200"}`} />}
+                  {step < 3 && <div className={`w-16 h-0.5 mx-4 ₹{currentStep > step ? "bg-black" : "bg-gray-200"}`} />}
                 </div>
               ))}
             </div>
@@ -461,7 +461,7 @@ export default function CheckoutPage() {
                       onChange={(e) => {
                         const value = e.target.value
                           .replace(/\s/g, "")
-                          .replace(/(.{4})/g, "$1 ")
+                          .replace(/(.{4})/g, "₹1 ")
                           .trim()
                         if (value.replace(/\s/g, "").length <= 16) {
                           setPaymentInfo({
@@ -572,11 +572,11 @@ export default function CheckoutPage() {
                     <h3 className="font-semibold mb-2">Order Items</h3>
                     <div className="space-y-2">
                       {items.map((item) => (
-                        <div key={`${item.id}-${item.size}`} className="flex justify-between text-sm">
+                        <div key={`₹{item.id}-₹{item.size}`} className="flex justify-between text-sm">
                           <span>
                             {item.name} (Size: {item.size}) x{item.quantity}
                           </span>
-                          <span>${(item.price * item.quantity).toFixed(2)}</span>
+                          <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                         </div>
                       ))}
                     </div>
@@ -587,7 +587,7 @@ export default function CheckoutPage() {
                       Back
                     </Button>
                     <Button onClick={handlePlaceOrder} disabled={loading} className="flex-1">
-                      {loading ? "Placing Order..." : `Place Order - $${total.toFixed(2)}`}
+                      {loading ? "Placing Order..." : `Place Order - ₹₹{total.toFixed(2)}`}
                     </Button>
                   </div>
                 </CardContent>
@@ -604,11 +604,11 @@ export default function CheckoutPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   {items.map((item) => (
-                    <div key={`${item.id}-${item.size}`} className="flex justify-between text-sm">
+                    <div key={`₹{item.id}-₹{item.size}`} className="flex justify-between text-sm">
                       <span className="truncate mr-2">
                         {item.name} (Size: {item.size}) x{item.quantity}
                       </span>
-                      <span>${(item.price * item.quantity).toFixed(2)}</span>
+                      <span>₹{(item.price * item.quantity).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
@@ -618,24 +618,24 @@ export default function CheckoutPage() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${subtotal.toFixed(2)}</span>
+                    <span>₹{subtotal.toFixed(2)}</span>
                   </div>
 
                   {discount > 0 && (
                     <div className="flex justify-between text-green-600">
                       <span>Discount ({promoCode})</span>
-                      <span>-${discount.toFixed(2)}</span>
+                      <span>-₹{discount.toFixed(2)}</span>
                     </div>
                   )}
 
                   <div className="flex justify-between">
                     <span>Shipping</span>
-                    <span>{shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`}</span>
+                    <span>{shippingCost === 0 ? "Free" : `₹₹{shippingCost.toFixed(2)}`}</span>
                   </div>
 
                   <div className="flex justify-between">
                     <span>Tax</span>
-                    <span>${tax.toFixed(2)}</span>
+                    <span>₹{tax.toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -643,7 +643,7 @@ export default function CheckoutPage() {
 
                 <div className="flex justify-between font-semibold">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span>₹{total.toFixed(2)}</span>
                 </div>
               </CardContent>
             </Card>
